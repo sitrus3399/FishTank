@@ -22,6 +22,25 @@ public class FoodManager : Singleton<FoodManager>
         
     }
 
+    private void OnEnable()
+    {
+        gameEvent.OnFeeding += Feeding;
+    }
+
+    private void OnDisable()
+    {
+        gameEvent.OnFeeding -= Feeding;
+    }
+
+    public void Feeding(Vector2 mousePos)
+    {
+        Food newFood = GotFood();
+        Vector3 spawnPosition = new Vector3(mousePos.x, mousePos.y, 0f);
+        newFood.transform.position = spawnPosition;
+        newFood.gameObject.SetActive(true);
+        newFood.InitData(selectedFood);
+    }
+
     public Food GotFood()
     {
         foreach (var trash in foodList)

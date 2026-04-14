@@ -1,8 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class Fish : MonoBehaviour
 {
+    [SerializeField] private GameEvent gameEvent;
+
     [Header("Movement Stats")]
     [SerializeField] private FishState fishState;
     [SerializeField] private float minSpeed = 2f; //For default 
@@ -11,6 +14,9 @@ public class Fish : MonoBehaviour
     [SerializeField] private float detectionRadius = 5f;
     [SerializeField] private float rotationSpeed = 5f;
     private Vector2 wanderDirection;
+    [SerializeField] private float minAccelerateTime;
+    [SerializeField] private float maxAccelerateTime;
+    private float currentAccelerateTime;
 
     [Header("Data")]
     private FishData fishData;
@@ -55,6 +61,24 @@ public class Fish : MonoBehaviour
         currentHungerCooldown = hungerCooldown;
     }
 
+    private void OnEnable()
+    {
+        gameEvent.OnScaringFish += ScaringFish;
+    }
+
+    private void OnDisable()
+    {
+        gameEvent.OnScaringFish -= ScaringFish;
+    }
+
+    void ScaringFish(Fish target)
+    {
+        if (target == this)
+        {
+            OnScared();
+        }
+    }
+
     void Update()
     {
         HandleHungerLogic();
@@ -75,7 +99,8 @@ public class Fish : MonoBehaviour
         {
             isBouncingBack = true;
             wanderDirection = ((Vector2)Vector3.zero - (Vector2)transform.position).normalized;
-            MoveTowards(wanderDirection);
+            float randomSpeed = Random.Range(minSpeed, maxSpeed);
+            MoveTowards(wanderDirection, randomSpeed);
         }
         else
         {
@@ -100,12 +125,18 @@ public class Fish : MonoBehaviour
 
     void WanderMovement()
     {
-        if (Random.value < 0.01f)
+        if (currentAccelerateTime <= 0)
         {
             wanderDirection = (Random.insideUnitCircle + (Vector2)transform.right).normalized;
+            currentMoveSpeed = Random.Range(minSpeed, maxSpeed);
+            currentAccelerateTime = Random.Range(minAccelerateTime, maxAccelerateTime);
+        }
+        else
+        {
+            currentAccelerateTime -= Time.deltaTime;
         }
 
-        MoveTowards(wanderDirection);
+        MoveTowards(wanderDirection, currentMoveSpeed);
     }
 
     void SeekFoodMovement()
@@ -136,8 +167,11 @@ public class Fish : MonoBehaviour
 
     void RunAwayMovement()
     {
-        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 runDir = ((Vector2)transform.position - mousePos).normalized;
+        Vector2 screenMousePos = Mouse.current.position.ReadValue();
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenMousePos.x, screenMousePos.y, Camera.main.nearClipPlane));
+        Vector2 finalPos = new Vector2(worldPos.x, worldPos.y);
+
+        Vector2 runDir = ((Vector2)transform.position - finalPos).normalized;
         MoveTowards(runDir, maxSpeed * 1.5f);
     }
 
@@ -201,11 +235,7 @@ public class Fish : MonoBehaviour
         float speed = customSpeed ?? currentMoveSpeed;
         Vector2 finalDirection = targetDir;
 
-        if (isBouncingBack)
-        {
-
-        }
-        else if (!isBouncingBack)
+        if (!isBouncingBack)
         {
             Vector2 avoidance = CalculateAvoidance() * avoidanceForce;
             finalDirection = (targetDir + avoidance).normalized;

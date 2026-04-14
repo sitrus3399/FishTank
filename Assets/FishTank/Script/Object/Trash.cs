@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Trash : MonoBehaviour
 {
+    [SerializeField] private GameEvent gameEvent;
+
     [Header("Movement Stats")]
     [SerializeField] private float minSpeed = 2f;
     [SerializeField] private float maxSpeed = 5f;
@@ -34,6 +36,16 @@ public class Trash : MonoBehaviour
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
     }
 
+    private void OnEnable()
+    {
+        gameEvent.OnRemoveTrash += RemoveTrash;
+    }
+
+    private void OnDisable()
+    {
+        gameEvent.OnRemoveTrash -= RemoveTrash;
+    }
+
     void Start()
     {
         currentMoveSpeed = Random.Range(minSpeed, maxSpeed);
@@ -57,6 +69,14 @@ public class Trash : MonoBehaviour
 
         MoveTowards(wanderDirection);
         ApplyMovement();
+    }
+
+    void RemoveTrash(Trash target)
+    {
+        if (target == this)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     bool IsAtEdge()

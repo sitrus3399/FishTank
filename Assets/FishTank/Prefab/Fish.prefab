@@ -47,11 +47,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfdeb426f056fc74eb4e38d06db4d3a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
+  gameEvent: {fileID: 11400000, guid: 6d098f48d73b39749b062e1ec9ec0403, type: 2}
   fishState: 0
   minSpeed: 2
   maxSpeed: 5
   detectionRadius: 5
   rotationSpeed: 5
+  minAccelerateTime: 1
+  maxAccelerateTime: 3
   spriteRenderer: {fileID: 817981823464984011}
   hungerMeterMax: 100
   hungerCooldown: 120

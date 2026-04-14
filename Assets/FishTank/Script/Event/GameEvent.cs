@@ -5,24 +5,15 @@ using UnityEngine;
 public class GameEvent : ScriptableObject
 {
     [SerializeField] private Action<float> onChangeSFXVolume;
-    [SerializeField] private Action<float> onUpdateMoney;
-    [SerializeField] private Action<float> onDecreaseMoney;
-
-    [SerializeField] private Action<string> onOpenNotif;
-
     [SerializeField] private Action<bool> onDemo;
-
-    [SerializeField] private Action<Fish> gotFish;
-
+    [SerializeField] private Action<Fish> onScaringFish;
+    [SerializeField] private Action<Trash> onRemoveTrash;
+    [SerializeField] private Action<Vector2> onFeeding;
     public Action<float> OnChangeSFXVolume { get { return onChangeSFXVolume; } set { onChangeSFXVolume = value; } }
-    public Action<float> OnUpdateMoney { get { return onUpdateMoney; } set { onUpdateMoney = value; } }
-    public Action<float> OnDecreaseMoney { get { return onDecreaseMoney; } set { onDecreaseMoney = value; } }
-
-    public Action<string> OnOpenNotif { get { return onOpenNotif; } set { onOpenNotif = value; } }
-
     public Action<bool> OnDemo { get { return onDemo; } set { onDemo = value; } }
-
-    public Action<Fish> GotFish { get { return gotFish; } set { gotFish = value; } }
+    public Action<Fish> OnScaringFish { get { return onScaringFish; } set { onScaringFish = value; } }
+    public Action<Trash> OnRemoveTrash { get { return onRemoveTrash; } set { onRemoveTrash = value; } }
+    public Action<Vector2> OnFeeding { get { return onFeeding; } set { onFeeding = value; } }
 
     public void ChangeSFXVolume(float value)
     {
@@ -34,23 +25,18 @@ public class GameEvent : ScriptableObject
         onDemo?.Invoke(value);
     }
 
-    public void UpdateMoney(float value)
+    public void ScaringFish(Fish target)
     {
-        onUpdateMoney?.Invoke(value);
+        onScaringFish?.Invoke(target);
     }
 
-    public void DecreaseMoney(float value)
+    public void RemoveTrash(Trash target)
     {
-        onDecreaseMoney?.Invoke(value);
+        onRemoveTrash?.Invoke(target);
     }
 
-    public void OpenNotif(string notif)
+    public void Feeding(Vector2 mousePos)
     {
-        OnOpenNotif?.Invoke(notif);
-    }
-
-    public void Fish(Fish newFish)
-    {
-        gotFish?.Invoke(newFish);
+        onFeeding?.Invoke(mousePos);
     }
 }
