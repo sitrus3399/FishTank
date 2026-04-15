@@ -134,10 +134,8 @@ public class Trash : MonoBehaviour
         }
     }
 
-    public void InitMetaData(float newMinSpeed, float newMaxSpeed, float newAvoidanceForce, float newAvoidanceRadius, Vector2 newMinBounds, Vector2 newMaxBounds)
+    public void InitMetaData(float newAvoidanceForce, float newAvoidanceRadius, Vector2 newMinBounds, Vector2 newMaxBounds)
     {
-        minSpeed = newMinSpeed;
-        maxSpeed = newMaxSpeed;
         avoidanceForce = newAvoidanceForce;
         avoidanceRadius = newAvoidanceRadius;
         minBounds = newMinBounds;

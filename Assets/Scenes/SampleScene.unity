@@ -735,6 +735,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishSpawner
   gameEvent: {fileID: 11400000, guid: 6d098f48d73b39749b062e1ec9ec0403, type: 2}
+  saveEvent: {fileID: 11400000, guid: 4adc4a62ff3bae44081139b80d664210, type: 2}
   cooldownSpawner: 10
   minRange: {x: -8.91, y: -4.99}
   maxRange: {x: 8.93, y: 4.97}
@@ -783,6 +784,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishManager
   gameEvent: {fileID: 11400000, guid: 6d098f48d73b39749b062e1ec9ec0403, type: 2}
+  saveEvent: {fileID: 11400000, guid: 4adc4a62ff3bae44081139b80d664210, type: 2}
   fishPrefab: {fileID: 8884469267780616840, guid: 833078e1834027e48b8cc7a51bd80fc5, type: 3}
   fishList: []
   fishData:
@@ -858,6 +860,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ee8af764f84786408204d293d73aa50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConfigManager
+  config:
+    gameTitle: 
+    fishSpawnerCooldown: 0
+    fishSpawnerMinRange: {x: 0, y: 0}
+    fishSpawnerMaxRange: {x: 0, y: 0}
+    specsFishByType: []
+    fishDetectionRadius: 0
+    fishHungerMeterMax: 0
+    fishHungerCooldown: 0
+    fishAvoidanceForce: 0
+    fishAvoidanceRadius: 0
+    fishMinBounds: {x: 0, y: 0}
+    fishMaxBounds: {x: 0, y: 0}
+    trashSpawnerCooldown: 0
+    trashSpawnerMinRange: {x: 0, y: 0}
+    trashSpawnerMaxRange: {x: 0, y: 0}
+    specsTrashByType: []
+    trashAvoidanceForce: 5
+    trashAvoidanceRadius: 1.2
+    trashMinBounds: {x: 0, y: 0}
+    trashMaxBounds: {x: 0, y: 0}
+  defaultConfig:
+    gameTitle: FishTank
+    fishSpawnerCooldown: 10
+    fishSpawnerMinRange: {x: -8.91, y: -4.99}
+    fishSpawnerMaxRange: {x: 8.93, y: 4.97}
+    specsFishByType:
+    - typeName: ANGELFISH
+      minSpeed: 0.1
+      maxSpeed: 3
+    - typeName: COD
+      minSpeed: 0.5
+      maxSpeed: 3
+    - typeName: POMFRET
+      minSpeed: 1
+      maxSpeed: 3
+    - typeName: SEAHORSE
+      minSpeed: 0.1
+      maxSpeed: 1
+    - typeName: STARFISH
+      minSpeed: 0.2
+      maxSpeed: 1.5
+    fishDetectionRadius: 5
+    fishHungerMeterMax: 100
+    fishHungerCooldown: 120
+    fishAvoidanceForce: 5
+    fishAvoidanceRadius: 1
+    fishMinBounds: {x: -8.51, y: -4.7}
+    fishMaxBounds: {x: 8.44, y: 4.92}
+    trashSpawnerCooldown: 30
+    trashSpawnerMinRange: {x: -8.91, y: 1.77}
+    trashSpawnerMaxRange: {x: 8.93, y: 4.97}
+    specsTrashByType:
+    - typeName: CHIPS
+      minSpeed: 0.1
+      maxSpeed: 0.5
+    - typeName: LOG
+      minSpeed: 0.05
+      maxSpeed: 0.3
+    trashAvoidanceForce: 5
+    trashAvoidanceRadius: 1.2
+    trashMinBounds: {x: -8.51, y: 2.77}
+    trashMaxBounds: {x: 8.44, y: 4.92}
+  saveEvent: {fileID: 11400000, guid: 4adc4a62ff3bae44081139b80d664210, type: 2}
 --- !u!1 &1271180923
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,6 +969,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashManager
   gameEvent: {fileID: 11400000, guid: 6d098f48d73b39749b062e1ec9ec0403, type: 2}
+  saveEvent: {fileID: 11400000, guid: 4adc4a62ff3bae44081139b80d664210, type: 2}
   trashPrefab: {fileID: 8952693872478207906, guid: 294ddacf2c00fa54583d2b5112208183, type: 3}
   trashList: []
   trashData:
@@ -915,8 +982,6 @@ MonoBehaviour:
   - typeName: LOG
     minSpeed: 0.05
     maxSpeed: 0.3
-  minSpeed: 2
-  maxSpeed: 5
   avoidanceForce: 5
   avoidanceRadius: 1.2
   minBounds: {x: -8.51, y: 2.77}
@@ -1042,6 +1107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrashSpawner
   gameEvent: {fileID: 11400000, guid: 6d098f48d73b39749b062e1ec9ec0403, type: 2}
+  saveEvent: {fileID: 11400000, guid: 4adc4a62ff3bae44081139b80d664210, type: 2}
   cooldownSpawner: 30
   minRange: {x: -8.91, y: 1.77}
   maxRange: {x: 8.93, y: 4.97}

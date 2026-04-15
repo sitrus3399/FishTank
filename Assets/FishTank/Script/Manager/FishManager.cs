@@ -4,6 +4,7 @@ using UnityEngine;
 public class FishManager : Singleton<FishManager>
 {
     [SerializeField] private GameEvent gameEvent;
+    [SerializeField] private SaveEvent saveEvent;
     [SerializeField] private Fish fishPrefab;
 
     [SerializeField] private List<Fish> fishList;
@@ -11,7 +12,6 @@ public class FishManager : Singleton<FishManager>
     [SerializeField] private List<SpecsFishByType> fishType;
 
     [Header("Meta Data")]
-    
     [SerializeField] private float detectionRadius = 5f;
     [SerializeField] private float hungerMeterMax = 100f;
     [SerializeField] private float hungerCooldown = 5f;
@@ -20,14 +20,10 @@ public class FishManager : Singleton<FishManager>
     [SerializeField] private Vector2 minBounds;
     [SerializeField] private Vector2 maxBounds;
 
-    void Start()
+    protected override void Awake()
     {
-        
-    }
-
-    void Update()
-    {
-        
+        base.Awake();
+        LoadDataFromConfig();
     }
 
     public Fish GotFish()
@@ -61,6 +57,18 @@ public class FishManager : Singleton<FishManager>
     public SpecsFishByType GetSpecsByType(string newTypeName)
     {
         return fishType.Find(x => x.typeName == newTypeName);
+    }
+
+    void LoadDataFromConfig()
+    {
+        saveEvent.OnLoadSpecsFishByType += (value) => { fishType = value; };
+        saveEvent.OnLoadFishDetectionRadius += (value) => { detectionRadius = value; };
+        saveEvent.OnLoadFishHungerMeterMax += (value) => { hungerMeterMax = value; };
+        saveEvent.OnLoadFishHungerCooldown += (value) => { hungerCooldown = value; };
+        saveEvent.OnLoadFishAvoidanceForce += (value) => { avoidanceForce = value; };
+        saveEvent.OnLoadFishAvoidanceRadius += (value) => { avoidanceRadius = value; };
+        saveEvent.OnLoadFishMinBounds += (value) => { minBounds = value; };
+        saveEvent.OnLoadFishMaxBounds += (value) => { maxBounds = value; };
     }
 }
 

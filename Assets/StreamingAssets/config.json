@@ -1,0 +1,83 @@
+{
+    "gameTitle": "FishTank",
+    "fishSpawnerCooldown": 10.0,
+    "fishSpawnerMinRange": {
+        "x": -8.90999984741211,
+        "y": -4.989999771118164
+    },
+    "fishSpawnerMaxRange": {
+        "x": 8.930000305175782,
+        "y": 4.96999979019165
+    },
+    "specsFishByType": [
+        {
+            "typeName": "ANGELFISH",
+            "minSpeed": 0.10000000149011612,
+            "maxSpeed": 3.0
+        },
+        {
+            "typeName": "COD",
+            "minSpeed": 0.5,
+            "maxSpeed": 3.0
+        },
+        {
+            "typeName": "POMFRET",
+            "minSpeed": 1.0,
+            "maxSpeed": 3.0
+        },
+        {
+            "typeName": "SEAHORSE",
+            "minSpeed": 0.10000000149011612,
+            "maxSpeed": 1.0
+        },
+        {
+            "typeName": "STARFISH",
+            "minSpeed": 0.20000000298023225,
+            "maxSpeed": 1.5
+        }
+    ],
+    "fishDetectionRadius": 5.0,
+    "fishHungerMeterMax": 100.0,
+    "fishHungerCooldown": 120.0,
+    "fishAvoidanceForce": 5.0,
+    "fishAvoidanceRadius": 1.0,
+    "fishMinBounds": {
+        "x": -8.510000228881836,
+        "y": -4.699999809265137
+    },
+    "fishMaxBounds": {
+        "x": 8.4399995803833,
+        "y": 4.920000076293945
+    },
+    "trashSpawnerCooldown": 30.0,
+    "trashSpawnerMinRange": {
+        "x": -8.90999984741211,
+        "y": 1.7699999809265137
+    },
+    "trashSpawnerMaxRange": {
+        "x": 8.930000305175782,
+        "y": 4.96999979019165
+    },
+    "specsTrashByType": [
+        {
+            "typeName": "CHIPS",
+            "minSpeed": 0.10000000149011612,
+            "maxSpeed": 0.5
+        },
+        {
+            "typeName": "LOG",
+            "minSpeed": 0.05000000074505806,
+            "maxSpeed": 0.30000001192092898
+        }
+    ],
+    "trashAvoidanceForce": 5.0,
+    "trashAvoidanceRadius": 1.2000000476837159,
+    "trashMinBounds": {
+        "x": -8.510000228881836,
+        "y": 2.7699999809265138
+    },
+    "trashMaxBounds": {
+        "x": 8.4399995803833,
+        "y": 4.920000076293945
+    }
+}

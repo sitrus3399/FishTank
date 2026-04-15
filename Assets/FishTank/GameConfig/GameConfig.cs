@@ -1,16 +1,31 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class GameConfig : MonoBehaviour
+[System.Serializable]
+public class GameConfig
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public string gameTitle;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [Header("Fish")]
+    public float fishSpawnerCooldown;
+    public Vector2 fishSpawnerMinRange;
+    public Vector2 fishSpawnerMaxRange;
+    public List<SpecsFishByType> specsFishByType;
+    public float fishDetectionRadius;
+    public float fishHungerMeterMax;
+    public float fishHungerCooldown;
+    public float fishAvoidanceForce;
+    public float fishAvoidanceRadius;
+    public Vector2 fishMinBounds;
+    public Vector2 fishMaxBounds;
+
+    [Header("Trash")]
+    public float trashSpawnerCooldown;
+    public Vector2 trashSpawnerMinRange;
+    public Vector2 trashSpawnerMaxRange;
+    public List<SpecsTrashByType> specsTrashByType;
+    public float trashAvoidanceForce = 5f;
+    public float trashAvoidanceRadius = 1.2f;
+    public Vector2 trashMinBounds;
+    public Vector2 trashMaxBounds;
 }

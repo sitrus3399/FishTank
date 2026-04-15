@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class TrashManager : Singleton<TrashManager>
 {
     [SerializeField] private GameEvent gameEvent;
+    [SerializeField] private SaveEvent saveEvent;
     [SerializeField] private Trash trashPrefab;
 
     [SerializeField] private List<Trash> trashList;
@@ -11,21 +13,15 @@ public class TrashManager : Singleton<TrashManager>
     [SerializeField] private List<SpecsTrashByType> trashType;
 
     [Header("Meta Data")]
-    [SerializeField] private float minSpeed = 2f;
-    [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float avoidanceForce = 5f;
     [SerializeField] private float avoidanceRadius = 1.2f;
     [SerializeField] private Vector2 minBounds;
     [SerializeField] private Vector2 maxBounds;
 
-    void Start()
+    protected override void Awake()
     {
-        
-    }
-
-    void Update()
-    {
-
+        base.Awake();
+        LoadDataFromConfig();
     }
 
     public Trash GotTrash()
@@ -46,7 +42,7 @@ public class TrashManager : Singleton<TrashManager>
         Trash newTrash = Instantiate(trashPrefab);
         newTrash.gameObject.SetActive(false);
         trashList.Add(newTrash);
-        newTrash.InitMetaData(minSpeed, maxSpeed, avoidanceForce, avoidanceRadius, minBounds, maxBounds);
+        newTrash.InitMetaData(avoidanceForce, avoidanceRadius, minBounds, maxBounds);
         return newTrash;
     }
 
@@ -59,6 +55,15 @@ public class TrashManager : Singleton<TrashManager>
     public SpecsTrashByType GetSpecsByType(string newTypeName)
     {
         return trashType.Find(x => x.typeName == newTypeName);
+    }
+
+    void LoadDataFromConfig()
+    {
+        saveEvent.OnLoadSpecsTrashByType += (value) => { trashType = value; };
+        saveEvent.OnLoadTrashAvoidanceForce += (value) => { avoidanceForce = value; };
+        saveEvent.OnLoadTrashAvoidanceRadius += (value) => { avoidanceRadius = value; };
+        saveEvent.OnLoadTrashMinBounds += (value) => { minBounds = value; };
+        saveEvent.OnLoadTrashMaxBounds += (value) => { maxBounds = value; };
     }
 }
 
