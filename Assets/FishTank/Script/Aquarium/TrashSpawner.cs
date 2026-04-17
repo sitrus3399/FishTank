@@ -1,4 +1,3 @@
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class TrashSpawner : MonoBehaviour
@@ -11,9 +10,22 @@ public class TrashSpawner : MonoBehaviour
     [SerializeField] private Vector2 minRange;
     [SerializeField] private Vector2 maxRange;
 
+    [SerializeField] private int maxAttempts = 100;
+    [SerializeField] private float spawnCheckRadius = 1.5f;
+
     void Awake()
     {
         LoadDataFromConfig();
+    }
+
+    private void OnEnable()
+    {
+        gameEvent.OnAddTrash += AddDataTrash;
+    }
+
+    private void OnDisable()
+    {
+        gameEvent.OnAddTrash -= AddDataTrash;
     }
 
     void Start()
@@ -40,9 +52,7 @@ public class TrashSpawner : MonoBehaviour
 
         if (newTrash != null)
         {
-            float randomX = Random.Range(minRange.x, maxRange.x);
-            float randomY = Random.Range(minRange.y, maxRange.y);
-            Vector3 randomPosition = new Vector3(randomX, randomY, 0);
+            Vector3 randomPosition = GetSafeSpawnPosition();
 
             newTrash.transform.position = randomPosition;
             newTrash.gameObject.SetActive(true);
@@ -63,5 +73,35 @@ public class TrashSpawner : MonoBehaviour
         saveEvent.OnLoadTrashSpawnerCooldown += (value) => { cooldownSpawner = value; };
         saveEvent.OnLoadTrashSpawnerMinRange += (value) => { minRange = value; };
         saveEvent.OnLoadTrashSpawnerMaxRange += (value) => { maxRange = value; };
+    }
+
+    void AddDataTrash(TrashData newTrashData)
+    {
+        Trash newTrash = TrashManager.Instance.GotTrash();
+
+        if (newTrash != null)
+        {
+            Vector3 randomPosition = GetSafeSpawnPosition();
+
+            newTrash.transform.position = randomPosition;
+            newTrash.gameObject.SetActive(true);
+            newTrash.InitData(newTrashData);
+        }
+    }
+
+    Vector3 GetSafeSpawnPosition()
+    {
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            Vector3 randomPos = new Vector3(Random.Range(minRange.x, maxRange.x), Random.Range(minRange.y, maxRange.y), 0
+            );
+
+            if (Physics.OverlapSphere(randomPos, spawnCheckRadius).Length == 0)
+            {
+                return randomPos;
+            }
+        }
+
+        return Vector3.zero; // Error code
     }
 }

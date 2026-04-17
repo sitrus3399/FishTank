@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 public class TrashManager : Singleton<TrashManager>
@@ -24,6 +23,18 @@ public class TrashManager : Singleton<TrashManager>
         LoadDataFromConfig();
     }
 
+    private void OnEnable()
+    {
+        gameEvent.OnAddTrash += AddDataTrash;
+        gameEvent.OnRemoveTrashData += RemoveDataTrash;
+    }
+
+    private void OnDisable()
+    {
+        gameEvent.OnAddTrash -= AddDataTrash;
+        gameEvent.OnRemoveTrashData -= RemoveDataTrash;
+    }
+
     public Trash GotTrash()
     {
         foreach (var trash in trashList)
@@ -46,6 +57,27 @@ public class TrashManager : Singleton<TrashManager>
         return newTrash;
     }
 
+    void RemoveDataTrash(TrashData newTrashData)
+    {
+        for (int i = trashList.Count - 1; i >= 0; i--)
+        {
+            if (trashList[i].TrashData == newTrashData)
+            {
+                GameObject objToDestroy = trashList[i].gameObject;
+                trashList.RemoveAt(i);
+                Destroy(objToDestroy);
+            }
+        }
+
+        for (int i = trashData.Count - 1; i >= 0; i--)
+        {
+            if (trashData[i] == newTrashData)
+            {
+                trashData.RemoveAt(i);
+            }
+        }
+    }
+
     public TrashData RandomTrashData()
     {
         int index = Random.Range(0, trashData.Count);
@@ -64,6 +96,11 @@ public class TrashManager : Singleton<TrashManager>
         saveEvent.OnLoadTrashAvoidanceRadius += (value) => { avoidanceRadius = value; };
         saveEvent.OnLoadTrashMinBounds += (value) => { minBounds = value; };
         saveEvent.OnLoadTrashMaxBounds += (value) => { maxBounds = value; };
+    }
+
+    void AddDataTrash(TrashData newTrash)
+    {
+        trashData.Add(newTrash);
     }
 }
 

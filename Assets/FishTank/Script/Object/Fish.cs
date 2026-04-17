@@ -45,6 +45,8 @@ public class Fish : MonoBehaviour
     private bool isScared = false;
     private Transform targetFood;
 
+    public FishData FishData { get { return fishData; } }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime.Collections;
 using UnityEngine;
 
 public class FishManager : Singleton<FishManager>
@@ -24,6 +25,18 @@ public class FishManager : Singleton<FishManager>
     {
         base.Awake();
         LoadDataFromConfig();
+    }
+
+    private void OnEnable()
+    {
+        gameEvent.OnAddFish += AddDataFish;
+        gameEvent.OnRemoveFishData += RemoveDataFish;
+    }
+
+    private void OnDisable()
+    {
+        gameEvent.OnAddFish -= AddDataFish;
+        gameEvent.OnRemoveFishData -= RemoveDataFish;
     }
 
     public Fish GotFish()
@@ -69,6 +82,33 @@ public class FishManager : Singleton<FishManager>
         saveEvent.OnLoadFishAvoidanceRadius += (value) => { avoidanceRadius = value; };
         saveEvent.OnLoadFishMinBounds += (value) => { minBounds = value; };
         saveEvent.OnLoadFishMaxBounds += (value) => { maxBounds = value; };
+    }
+
+    void AddDataFish(FishData newFish)
+    {
+        fishData.Add(newFish);
+    }
+
+    void RemoveDataFish(FishData newFishData)
+    {
+        Debug.Log($"RemoveFishData {newFishData.fishName}");
+        for (int i = fishList.Count - 1; i >= 0; i--)
+        {
+            if (fishList[i].FishData == newFishData)
+            {
+                GameObject objToDestroy = fishList[i].gameObject;
+                fishList.RemoveAt(i);
+                Destroy(objToDestroy);
+            }
+        }
+
+        for (int i = fishData.Count - 1; i >= 0; i--)
+        {
+            if (fishData[i] == newFishData)
+            {
+                fishData.RemoveAt(i);
+            }
+        }
     }
 }
 

@@ -28,6 +28,8 @@ public class Trash : MonoBehaviour
     private Rigidbody2D rb;
     private bool isBouncingBack = false;
 
+    public TrashData TrashData { get { return trashData; } }
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();

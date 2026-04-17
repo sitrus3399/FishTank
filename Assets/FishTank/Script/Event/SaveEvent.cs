@@ -87,7 +87,7 @@ public class SaveEvent : ScriptableObject
         onLoadTrashAvoidanceForce?.Invoke(trashAvoidanceForce);
         onLoadTrashAvoidanceRadius?.Invoke(trashAvoidanceRadius);
         onLoadTrashMinBounds?.Invoke(trashMinBounds);
-        OnLoadTrashMaxBounds?.Invoke(trashMaxBounds);
+        onLoadTrashMaxBounds?.Invoke(trashMaxBounds);
     }
 
     public void LoadTrashDataSpawner(float trashSpawnerCooldown, Vector2 trashSpawnerMinRange, Vector2 trashSpawnerMaxRange)

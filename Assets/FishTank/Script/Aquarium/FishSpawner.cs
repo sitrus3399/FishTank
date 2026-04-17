@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class FishSpawner : MonoBehaviour
@@ -11,9 +10,22 @@ public class FishSpawner : MonoBehaviour
     [SerializeField] private Vector2 minRange;
     [SerializeField] private Vector2 maxRange;
 
+    [SerializeField] private int maxAttempts = 100;
+    [SerializeField] private float spawnCheckRadius = 1.5f;
+
     void Awake()
     {
         LoadDataFromConfig();
+    }
+
+    private void OnEnable()
+    {
+        gameEvent.OnAddFish += AddDataFish;
+    }
+
+    private void OnDisable()
+    {
+        gameEvent.OnAddFish -= AddDataFish;
     }
 
     void Start()
@@ -40,9 +52,7 @@ public class FishSpawner : MonoBehaviour
 
         if (newFish != null)
         {
-            float randomX = Random.Range(minRange.x, maxRange.x);
-            float randomY = Random.Range(minRange.y, maxRange.y);
-            Vector3 randomPosition = new Vector3(randomX, randomY, 0);
+            Vector3 randomPosition = GetSafeSpawnPosition();
 
             newFish.transform.position = randomPosition;
             newFish.gameObject.SetActive(true);
@@ -62,6 +72,36 @@ public class FishSpawner : MonoBehaviour
     {
         saveEvent.OnLoadFishSpawnerCooldown += (value) => { cooldownSpawner = value; };
         saveEvent.OnLoadFishSpawnerMinRange += (value) => { minRange = value; };
-        saveEvent.OnLoadFishSpawnerMinRange += (value) => { maxRange = value; };
+        saveEvent.OnLoadFishSpawnerMaxRange += (value) => { maxRange = value; };
+    }
+
+    void AddDataFish(FishData newFishData)
+    {
+        Fish newFish = FishManager.Instance.GotFish();
+
+        if (newFish != null)
+        {
+            Vector3 randomPosition = GetSafeSpawnPosition();
+
+            newFish.transform.position = randomPosition;
+            newFish.gameObject.SetActive(true);
+            newFish.InitData(newFishData);
+        }
+    }
+
+    Vector3 GetSafeSpawnPosition()
+    {
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            Vector3 randomPos = new Vector3(Random.Range(minRange.x, maxRange.x), Random.Range(minRange.y, maxRange.y), 0
+            );
+
+            if (Physics.OverlapSphere(randomPos, spawnCheckRadius).Length == 0)
+            {
+                return randomPos;
+            }
+        }
+
+        return Vector3.zero; // Error code
     }
 }

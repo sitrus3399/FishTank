@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.pimdewitte.unitymainthreaddispatcher": {
+      "version": "file:C:/Users/ReHunter/Downloads/Compressed/UnityMainThreadDispatcher-master",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.2d.animation": {
       "version": "13.0.4",
       "depth": 0,
