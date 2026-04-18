@@ -9,6 +9,10 @@ public class FileSpawnManager : MonoBehaviour
 {
     [SerializeField] private GameEvent gameEvent;
 
+    [Header("Internal Assets to Export")]
+    public List<Sprite> defaultFishSprites = new List<Sprite>();
+    public List<Sprite> defaultTrashSprites = new List<Sprite>();
+
     [Header("Folder Configuration")]
     [Tooltip("Folder name inside Application.dataPath (Editor) or Game_Data (Build)")]
     public string folderName = "ExternalAssets";
@@ -31,12 +35,80 @@ public class FileSpawnManager : MonoBehaviour
             Directory.CreateDirectory(targetPath);
         }
 
+#if !UNITY_EDITOR
+        ExportInternalSpritesToFolder(); 
+#endif
+
         InitWatcher();
         Debug.Log($"Monitoring folder: {targetPath}");
 
         LoadExistingFiles();
     }
 
+    void ExportInternalSpritesToFolder()
+    {
+        Debug.Log("Exporting internal sprites to ExternalAssets folder...");
+
+        ExportList(defaultFishSprites);
+        ExportList(defaultTrashSprites);
+    }
+
+    void ExportList(List<Sprite> sprites)
+    {
+        foreach (Sprite sp in sprites)
+        {
+            if (sp == null) continue;
+
+            string filePath = Path.Combine(targetPath, sp.name + ".png");
+
+            if (!File.Exists(filePath))
+            {
+                try
+                {
+                    // 1. Ambil texture asal
+                    Texture2D sourceTex = sp.texture;
+
+                    // 2. Buat RenderTexture sementara (seperti kanvas kamera)
+                    // Ini teknik paling ampuh untuk bypass masalah kompresi dan 'Tight' mesh
+                    RenderTexture tmp = RenderTexture.GetTemporary(
+                        sourceTex.width,
+                        sourceTex.height,
+                        0,
+                        RenderTextureFormat.Default,
+                        RenderTextureReadWrite.Linear);
+
+                    // 3. Salin texture asli ke RenderTexture
+                    Graphics.Blit(sourceTex, tmp);
+                    RenderTexture previous = RenderTexture.active;
+                    RenderTexture.active = tmp;
+
+                    // 4. Buat Texture2D baru seukuran rect sprite saja
+                    Texture2D readableText = new Texture2D((int)sp.rect.width, (int)sp.rect.height);
+
+                    // 5. Baca pixel dari RenderTexture berdasarkan area sprite
+                    readableText.ReadPixels(new Rect(sp.rect.x, sp.rect.y, sp.rect.width, sp.rect.height), 0, 0);
+                    readableText.Apply();
+
+                    // 6. Reset RenderTexture
+                    RenderTexture.active = previous;
+                    RenderTexture.ReleaseTemporary(tmp);
+
+                    // 7. Encode dan Simpan
+                    byte[] bytes = readableText.EncodeToPNG();
+                    File.WriteAllBytes(filePath, bytes);
+
+                    // 8. Bersihkan memori
+                    Destroy(readableText);
+
+                    Debug.Log($"[Export Success] {sp.name}.png berhasil diekspor.");
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogError($"[Export Failed] {sp.name}: {e.Message}");
+                }
+            }
+        }
+    }
     void LoadExistingFiles()
     {
         if (Directory.Exists(targetPath))
@@ -170,7 +242,6 @@ public class FileSpawnManager : MonoBehaviour
         }
         else
         {
-            ///// Jika masih tidak jalan, log ini akan membantu memberitahu path mana yang miss
             Debug.LogWarning($"Path not found in activeAssets: {path}");
         }
     }

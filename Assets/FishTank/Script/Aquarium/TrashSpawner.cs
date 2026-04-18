@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TrashSpawner : MonoBehaviour
@@ -12,6 +13,9 @@ public class TrashSpawner : MonoBehaviour
 
     [SerializeField] private int maxAttempts = 100;
     [SerializeField] private float spawnCheckRadius = 1.5f;
+
+    [SerializeField] private ParticleSystem bubbleBlast;
+    [SerializeField] private List<ParticleSystem> bubbleBlastList;
 
     void Awake()
     {
@@ -57,6 +61,8 @@ public class TrashSpawner : MonoBehaviour
             newTrash.transform.position = randomPosition;
             newTrash.gameObject.SetActive(true);
             newTrash.InitData(TrashManager.Instance.RandomTrashData());
+
+            SpawnParticle(randomPosition);
         }
     }
 
@@ -86,7 +92,18 @@ public class TrashSpawner : MonoBehaviour
             newTrash.transform.position = randomPosition;
             newTrash.gameObject.SetActive(true);
             newTrash.InitData(newTrashData);
+
+            SpawnParticle(randomPosition);
         }
+    }
+
+    public void SpawnParticle(Vector3 loc)
+    {
+        AudioManager.Instance.PlaySFX("Bubble");
+
+        ParticleSystem bubble = GotBubbleBlast();
+        bubble.gameObject.SetActive(true);
+        bubble.gameObject.transform.position = loc;
     }
 
     Vector3 GetSafeSpawnPosition()
@@ -103,5 +120,26 @@ public class TrashSpawner : MonoBehaviour
         }
 
         return Vector3.zero; // Error code
+    }
+
+    private ParticleSystem GotBubbleBlast()
+    {
+        foreach (ParticleSystem particle in bubbleBlastList)
+        {
+            if (!particle.gameObject.activeInHierarchy)
+            {
+                return particle;
+            }
+        }
+
+        return CreateBubbleBlast();
+    }
+
+    public ParticleSystem CreateBubbleBlast()
+    {
+        ParticleSystem newParticle = Instantiate(bubbleBlast);
+        newParticle.gameObject.SetActive(false);
+        bubbleBlastList.Add(newParticle);
+        return newParticle;
     }
 }
